@@ -1,9 +1,9 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
 import renderWithRouter from '../renderWithRouter';
 import App from '../App';
-import { act } from 'react-dom/test-utils';
 
 describe('testing component App', () => {
   test('first link must have text "Home"', () => {
