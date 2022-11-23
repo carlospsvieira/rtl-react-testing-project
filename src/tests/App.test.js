@@ -3,6 +3,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from '../renderWithRouter';
 import App from '../App';
+import { act } from 'react-dom/test-utils';
 
 describe('testing component App', () => {
   test('first link must have text "Home"', () => {
@@ -25,7 +26,48 @@ describe('testing component App', () => {
     renderWithRouter(<App />);
     const linkFavorite = screen.getByRole('link', {
       name: /favorite pokémon/i,
-    })
+    });
     expect(linkFavorite).toBeInTheDocument();
+  });
+
+  test('on click link home must be redirected to "/"', () => {
+    const { history } = renderWithRouter(<App />);
+
+    const linkHome = screen.getByRole('link', {
+      name: /home/i,
+    });
+    userEvent.click(linkHome);
+    expect(history.location.pathname).toBe('/');
+  });
+
+  test('on click link about must be redirected to "/about"', () => {
+    const { history } = renderWithRouter(<App />);
+
+    const linkAbout = screen.getByRole('link', {
+      name: /about/i,
+    });
+    userEvent.click(linkAbout);
+    expect(history.location.pathname).toBe('/about');
+  });
+
+  test('on click link favorite pokemon must be redirected to "/favorites"', () => {
+    const { history } = renderWithRouter(<App />);
+
+    const linkFavorite = screen.getByRole('link', {
+      name: /favorite pokémon/i,
+    });
+    userEvent.click(linkFavorite);
+    expect(history.location.pathname).toBe('/favorites');
+  });
+
+  test('on click unknown pages are redirected to page not found', () => {
+    const { history } = renderWithRouter(<App />);
+    act(() => {
+      history.push('/carlos');
+    });
+    const notFound = screen.getByRole('heading', {
+      name: /page requested not found/i,
+    });
+    expect(notFound).toBeInTheDocument();
   });
 });
